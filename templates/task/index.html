@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md mx-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+            <i class="fa-solid fa-list-check"></i> Task Manager
+        </h1>
+
+        <!-- Task Input -->
+        <div class="flex items-center space-x-4 mb-6">
+            <input type="text" id="task-input" placeholder="Add a new task..."
+                   class="flex-grow p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+            <button id="add-task-btn"
+                    class="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Task List -->
+        <ul id="task-list" class="space-y-4">
+            <!-- Tasks will be dynamically added here by JavaScript -->
+        </ul>
+    </div>
+
+    <!-- JavaScript for functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskInput = document.getElementById('task-input');
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const taskList = document.getElementById('task-list');
+
+            addTaskBtn.addEventListener('click', addTask);
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+
+            function addTask() {
+                const taskText = taskInput.value.trim();
+                if (taskText === '') {
+                    // Do not add empty tasks
+                    return;
+                }
+
+                // Create new list item for the task
+                const li = document.createElement('li');
+                li.className = 'flex items-center bg-gray-50 p-4 rounded-xl shadow-sm transition duration-300 ease-in-out transform hover:scale-105';
+                li.innerHTML = `
+                    <span class="flex-grow text-gray-700">${taskText}</span>
+                    <button class="complete-btn bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                    <button class="delete-btn bg-red-500 text-white p-2 ml-2 rounded-full hover:bg-red-600 transition duration-300 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                `;
+
+                taskList.appendChild(li);
+                taskInput.value = '';
+
+                // Add event listeners for the new buttons
+                const completeBtn = li.querySelector('.complete-btn');
+                const deleteBtn = li.querySelector('.delete-btn');
+
+                completeBtn.addEventListener('click', () => {
+                    li.classList.toggle('bg-green-100');
+                    li.classList.toggle('line-through');
+                    li.classList.toggle('text-gray-400');
+                });
+
+                deleteBtn.addEventListener('click', () => {
+                    taskList.removeChild(li);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
